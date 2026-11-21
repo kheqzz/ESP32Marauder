@@ -40,7 +40,7 @@
   //#define MARAUDER_CARDPUTER
   //#define MARAUDER_CARDPUTER_ADV
   //#define MARAUDER_V8
-  //#define MARAUDER_PANCAKE
+  #define MARAUDER_PANCAKE
   //#define MARAUDER_MINI_V3
   //#define MARAUDER_M5_NANO_C6
   //#define DUAL_MINI_C5
@@ -2910,7 +2910,9 @@
     #endif
 
     #ifdef MARAUDER_PANCAKE
-      #define SD_CS 7
+      // microSD slot sits on the TFT module: shares SCK/MOSI/MISO with the LCD
+      // (TFT_SCLK 10 / TFT_MOSI 8 / TFT_MISO 23), only CS is separate.
+      #define SD_CS 24
     #endif
 
     #ifdef MARAUDER_MINI_V3
@@ -3184,8 +3186,11 @@
       #define GPS_RX 13
     #elif defined(MARAUDER_PANCAKE)
       #define GPS_SERIAL_INDEX 1
-      #define GPS_TX 14
-      #define GPS_RX 13
+      // GPS: RX=3 is all that is really needed (the module streams NMEA on its own).
+      // GPIO13/14 are USB D-/D+, GPIO23 is CTP_INT, GPIO6 breaks the SD mount and
+      // GPIO15 panics ("Load access fault"), so TX uses the spare GPIO2.
+      #define GPS_TX 2
+      #define GPS_RX 3
     #elif defined(MARAUDER_MINI_V3)
       #define GPS_SERIAL_INDEX 1
       #define GPS_TX 14
@@ -3272,10 +3277,10 @@
 
     #elif defined(MARAUDER_PANCAKE)
       #define I2C_SDA 9
-      #define I2C_SCL 10
+      #define I2C_SCL 4
       #define HAS_MAX1704X
       // FT6336 cap touch - shares I2C bus with MAX17048
-      #define CTP_RST 8
+      #define CTP_RST 7
       #define CTP_SDA I2C_SDA
       #define CTP_SCL I2C_SCL
     #endif

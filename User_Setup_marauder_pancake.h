@@ -23,12 +23,13 @@
 // Section 2. Pin assignments (Pancake hardware)
 // ##################################################################################
 
-#define TFT_MISO  4
-#define TFT_MOSI  24
-#define TFT_SCLK  23
+#define TFT_MISO  25   // unused by this panel, but TFT_eSPI needs a real pin to init the bus
+                       // (must stay a valid free GPIO; GPIO15 crashes, -1 blanks the panel)
+#define TFT_MOSI  8
+#define TFT_SCLK  10
 #define TFT_CS    5    // TFT chip select
-#define TFT_DC    3    // Data/command
-#define TFT_RST   2    // Reset
+#define TFT_DC    0    // Data/command
+#define TFT_RST   1    // Reset
 #define TFT_BL    26   // Backlight
 
 #define TOUCH_CS  -1   // No resistive touch chip; FT6336 is I2C-only

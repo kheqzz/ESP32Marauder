@@ -138,6 +138,16 @@ bool SDInterface::initSD() {
     pinMode(SD_CS, OUTPUT);
 
     delay(10);
+
+    #ifdef MARAUDER_PANCAKE
+      // The microSD slot is on the TFT module and shares SCK/MOSI/MISO with the
+      // panel. Keep the display deselected for the whole SD transaction, else the
+      // panel answers on the shared bus and the card mount fails.
+      pinMode(TFT_CS, OUTPUT);
+      digitalWrite(TFT_CS, HIGH);
+      delay(5);
+    #endif
+
     #if (defined(MARAUDER_M5STICKC)) || (defined(HAS_CYD_TOUCH)) || (defined(MARAUDER_CARDPUTER)) || (defined(MARAUDER_CARDPUTER_ADV))
       /* Set up SPI SD Card using external pin header
       StickCPlus Header - SPI SD Card Reader

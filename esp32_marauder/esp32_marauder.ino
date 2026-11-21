@@ -4,7 +4,11 @@ Board: LOLIN D32
 Partition Scheme: Minimal SPIFFS
 https://www.online-utility.org/image/convert/to/XBM
 */
+#define CONFIG_IDF_TARGET_ESP32 0
 
+#ifndef CONFIG_IDF_TARGET_ESP32C5
+#define CONFIG_IDF_TARGET_ESP32C5 1
+#endif
 #include "configs.h"
 #ifdef MARAUDER_WS_C5_35
   #include "ws_c5_exio.h"  // backlight PWM lives on the I/O expander
@@ -366,7 +370,12 @@ void setup()
   #endif
   
   // Preset SPI CS pins to avoid bus conflicts
+  // NOTE: the pin must be an OUTPUT first, otherwise digitalWrite() does nothing
+  // and the display CS floats. On boards whose microSD slot sits on the TFT
+  // module (Pancake), a floating TFT_CS makes the panel answer on the shared SPI
+  // bus and the SD card mount then fails.
   #if defined(HAS_SCREEN) && !defined(MARAUDER_POOM)
+    pinMode(TFT_CS, OUTPUT);
     digitalWrite(TFT_CS, HIGH);
   #endif
   
